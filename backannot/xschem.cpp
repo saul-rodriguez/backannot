@@ -226,6 +226,7 @@ void XSchem::identifyNets(QString parent, QStringList parent_nets, QString subci
 
      data = fields[0].data(); //First string defines the type
 
+     //Check for subckt
      if (data[0] == 'x') { // subcircuit found, prepare parents name and nets
         qDebug()<<"subcircuit "<<fields[0]<<" found";
 
@@ -250,7 +251,7 @@ void XSchem::identifyNets(QString parent, QStringList parent_nets, QString subci
             for (int j=0; j < child_nets_size; j++) {
                 int ispar = QString::compare(aux_net,child_nets[j]); //Compare if a port name in parent subckt is used to call a local subckt
                 if(!ispar) {
-                    aux_net = parent_nets[j]; //propagate the parent name!
+                    aux_net = parent_nets[j]; //Here change the name of the net and propagate the parent name!
                     marker = 1;
                     break;
                 }
@@ -274,7 +275,7 @@ void XSchem::identifyNets(QString parent, QStringList parent_nets, QString subci
         identifyNets(aux_parent,aux_parent_nets,aux_subcircuit);
      }
 
-     //Check always if child_nets_size != 0
+
 
      //Test for end of loop
      el1 = QString::compare(m_spicefile[index],".end");
