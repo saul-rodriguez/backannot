@@ -275,6 +275,50 @@ void XSchem::identifyNets(QString parent, QStringList parent_nets, QString subci
         identifyNets(aux_parent,aux_parent_nets,aux_subcircuit);
      }
 
+     if (data[0] == 'r' || data[0] == 'c' || data[0] == 'l' || data[0] == 'v' || data[0] == 'i') {
+        qDebug()<<"Device found";
+
+        QString aux_name;
+        //QString aux_subcircuit;
+        QStringList aux_nets;
+        int aux_size = fields.size();
+
+        if (!isroot) {
+            aux_name = fields[0]; //Name of the device is written directly
+        } else {
+            aux_name = parent + "." + fields[0]; //Name of the device is appended to parent saved
+        }
+
+        int marker;
+
+        for (int i=1; i < 3; i++) { // TODO here the limit has to be variable in order to support 3 or 4 terminal devices!
+            marker = 0;
+            //Here check if the names are the same as in the parent nets and propagate
+            QString aux_net = fields[i];
+            for (int j=0; j < child_nets_size; j++) {
+                int ispar = QString::compare(aux_net,child_nets[j]); //Compare if a port name in parent subckt is used to call a local subckt
+                if(!ispar) {
+                    aux_net = parent_nets[j]; //Here change the name of the net and propagate the parent name!
+                    marker = 1;
+                    break;
+                }
+            }
+            if (marker) {
+                aux_nets << aux_net;
+            } else {
+                if(!isroot) { //all root nets are available to the subckt
+                    aux_nets << aux_net;
+                } else { //internal name is used
+                    aux_nets << parent + "." + aux_net;
+                }
+            }
+
+        }
+
+        //Save a device
+        saveSpiceDev(aux_name,aux_nets);
+     }
+
 
 
      //Test for end of loop
