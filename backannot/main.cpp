@@ -16,5 +16,7 @@ int main(int argc, char *argv[])
     m_xschem.readSpice("/home/saul/projects/xschem_library/simulations/voltage_div_tb.spice");
     m_xschem.printSpiceDev();
 
+    m_xschem.readNodeVoltages("/home/saul/projects/xschem_library/simulations/nodes_op.txt");
+    m_xschem.printNgSpiceVoltages();
     return a.exec();
 }

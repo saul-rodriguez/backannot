@@ -352,6 +352,53 @@ void XSchem::printSpiceDev()
     }
 }
 
+void XSchem::readNodeVoltages(QString filename)
+{
+    QFile file(filename);
+
+    if(!file.open(QIODevice::ReadOnly)) {
+                qDebug("error opening file");
+    }
+
+    QTextStream in(&file);
+
+    QString db = in.readAll();
+
+    QStringList fileLines;
+    int numLines; //number of lines
+
+    fileLines = db.split(QRegExp("\n"));
+    numLines = fileLines.length();
+
+
+    //Save nets, voltages and currents
+    QStringList fields;
+    //QChar *data;
+
+    QString aux;
+    for (int i = 0; i < numLines; i++) { //Each line is checked for primitive components
+        aux = fileLines[i];
+        aux.replace(QString(" "),QString(""));
+        fields = aux.split("=");
+
+        if (fields.size()==2) {
+            m_ngspiceop.m_nets << fields[0];
+            m_ngspiceop.m_values << fields[1];
+        }
+    }
+
+    m_ngspiceop.convertEng();
+
+    file.close();
+}
+
+void XSchem::printNgSpiceVoltages()
+{
+    for (int i=0; i < m_ngspiceop.m_nets.size(); i++) {
+        qDebug() << m_ngspiceop.m_nets[i] << " " << m_ngspiceop.m_values_eng[i];
+    }
+}
+
 
 
 

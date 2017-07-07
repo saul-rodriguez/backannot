@@ -4,6 +4,7 @@
 #include <QObject>
 #include "device.h"
 #include "spicedev.h"
+#include "ngspiceop.h"
 
 class XSchem : public QObject
 {
@@ -17,6 +18,8 @@ private:
 
     QStringList m_spicefile;
     int m_spicefile_size;
+
+    ngspiceOP m_ngspiceop;
 
 
 
@@ -37,10 +40,14 @@ public:
     void readXSchem(QString filename, QString parent);
     void identifyComponent(QStringList fields, QString filename, QString parent);
     void printdevices();
+
     void readSpice(QString filename);
     void identifyNets(QString parent, QStringList parent_nets, QString subcirc);
     void saveSpiceDev(QString name, QStringList nets);
     void printSpiceDev();
+
+    void readNodeVoltages(QString filename);
+    void printNgSpiceVoltages();
 
 signals:
 
